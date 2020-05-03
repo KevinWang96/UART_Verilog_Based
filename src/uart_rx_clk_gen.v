@@ -1,13 +1,12 @@
 /*
- * @Author: Yihao Wang
- * @Date: 2020-05-02 03:52:38
- * @LastEditTime: 2020-05-02 19:47:03
+ * @Author: your name
+ * @Date: 2020-05-02 22:01:27
+ * @LastEditTime: 2020-05-02 22:03:15
  * @LastEditors: Please set LastEditors
  * @Description: 
- *      a. Clock generator of Tx side 
- *      b. Divides system clock and generates bit_clock that satisfies 
-            target baud rate 
- * @FilePath: /uart/src/uart_tx_clk_gen.v
+ *      a. Clock generator of Rx side 
+ *      b. Divides system clock and generates sample_clock
+ * @FilePath: /uart/src/uart_rx_clk_gen.v
  */
  `timescale 1ns/1ps
  module uart_tx_clk_gen #(
@@ -17,20 +16,20 @@
  (
      sys_clk, 
      reset,
-     bit_clk
+     sample_clk
  );
 
     input   sys_clk;        // positive edge triggering
     input   reset;          // sync reset
-    output  bit_clk;
+    output  sample_clk;
 
-    localparam  COUNT_VALUE =   SYS_CLK_FREQ / BAUD_RATE;   // the count value of counter
+    localparam  COUNT_VALUE =   SYS_CLK_FREQ / (BAUD_RATE * 16);   // the count value of counter
 
-    reg                             sample_dff;     // a DFF is used to sample bit_clk to make it glitch-free
+    reg                             sample_dff;     // a DFF is used to sample sample_clk to make it glitch-free
     reg [0:$clog2(COUNT_VALUE) - 1] counter;        // counter
     wire                            find_count;     // asserted when count value is equal to (COUNT_VALUE - 1)
 
-    assign  bit_clk =   sample_dff;
+    assign  sample_clk =   sample_dff;
 
     assign  find_count  =   (counter == COUNT_VALUE - 1);
 
