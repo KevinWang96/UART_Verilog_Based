@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-02 22:01:27
- * @LastEditTime: 2020-05-02 22:03:15
+ * @LastEditTime: 2020-05-03 00:42:20
  * @LastEditors: Please set LastEditors
  * @Description: 
  *      a. Clock generator of Rx side 
@@ -9,7 +9,7 @@
  * @FilePath: /uart/src/uart_rx_clk_gen.v
  */
  `timescale 1ns/1ps
- module uart_tx_clk_gen #(
+ module uart_rx_clk_gen #(
      parameter  SYS_CLK_FREQ    =   200_000_000,    // frequency of sys_clk (Hz)
      parameter  BAUD_RATE       =   19200           // target baud rate: 9600, 19200, 38400, 57600, 115200, etc
  )
@@ -20,7 +20,7 @@
  );
 
     input   sys_clk;        // positive edge triggering
-    input   reset;          // sync reset
+    input   reset;          // async reset
     output  sample_clk;
 
     localparam  COUNT_VALUE =   SYS_CLK_FREQ / (BAUD_RATE * 16);   // the count value of counter
@@ -33,7 +33,7 @@
 
     assign  find_count  =   (counter == COUNT_VALUE - 1);
 
-    always @(posedge sys_clk) begin
+    always @(posedge sys_clk, posedge reset) begin
         if(reset) begin
             counter <= 0;
             sample_dff <= 0;
