@@ -1,7 +1,7 @@
 /*
  * @Author: Yihao Wang
  * @Date: 2020-05-03 00:45:30
- * @LastEditTime: 2020-05-03 00:58:16
+ * @LastEditTime: 2020-05-03 03:14:20
  * @LastEditors: Please set LastEditors
  * @Description: Top module of UART Rx (integrate clk_gen and receive_logic)
  * @FilePath: /uart/src/uart_rx_top.v
@@ -19,7 +19,8 @@
      uart_rx_dout,
      uart_rx_done,
      uart_rx_data_error,
-     uart_rx_frame_error
+     uart_rx_frame_error,
+     uart_rx_sample_clk
  );
 
     input                       sys_clk;
@@ -29,15 +30,17 @@
     output                      uart_rx_done;
     output                      uart_rx_data_error;
     output                      uart_rx_frame_error;
+    output                      uart_rx_sample_clk; // used by Rx async FIFO
 
-    wire                        sample_clk;
+    wire                        sample_clk_i;
+    assign  uart_rx_sample_clk  =   sample_clk_i;   
 
     uart_rx_receive_logic #(
         .FRAME_WIDTH            (FRAME_WIDTH)
     )
     uart_rx_receive_logic_inst
     (
-        .sample_clk             (sample_clk),
+        .sample_clk             (sample_clk_i),
         .reset                  (reset),
         .uart_rx_din            (uart_rx_din),
         .uart_rx_dout           (uart_rx_dout),
@@ -54,7 +57,7 @@
     (
         .sys_clk                (sys_clk),
         .reset                  (reset),
-        .sample_clk             (sample_clk)
+        .sample_clk             (sample_clk_i)
     );
 
  endmodule

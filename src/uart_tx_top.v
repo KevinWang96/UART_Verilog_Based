@@ -1,7 +1,7 @@
 /*
  * @Author: Yihao Wang
  * @Date: 2020-05-03 00:23:42
- * @LastEditTime: 2020-05-03 00:37:43
+ * @LastEditTime: 2020-05-03 03:13:55
  * @LastEditors: Please set LastEditors
  * @Description: Top module of UART Tx (integrate clk_gen and send_logic)
  * @FilePath: /uart/src/uart_tx_top.v
@@ -18,7 +18,8 @@
      uart_tx_en,
      uart_tx_din,
      uart_tx_dout,
-     uart_tx_done
+     uart_tx_done,
+     uart_tx_bit_clk
  );
 
     input                       sys_clk;
@@ -27,15 +28,17 @@
     input   [0:FRAME_WIDTH - 1] uart_tx_din;
     output                      uart_tx_dout;
     output                      uart_tx_done;
+    output                      uart_tx_bit_clk;    // used by Tx async FIFO
 
-    wire                        bit_clk;
+    wire                        bit_clk_i;
+    assign  uart_tx_bit_clk =   bit_clk_i;
 
     uart_tx_send_logic #(
         .FRAME_WIDTH    (FRAME_WIDTH)
     )
     uart_tx_send_logic_inst
     (
-        .bit_clk        (bit_clk),
+        .bit_clk        (bit_clk_i),
         .reset          (reset),
         .uart_tx_en     (uart_tx_en),
         .uart_tx_din    (uart_tx_din),
@@ -51,7 +54,7 @@
     (
         .sys_clk        (sys_clk),
         .reset          (reset),
-        .bit_clk        (bit_clk)
+        .bit_clk        (bit_clk_i)
     );
 
  endmodule
