@@ -1,7 +1,7 @@
 /*
  * @Author: Yihao Wang
  * @Date: 2020-05-03 02:13:15
- * @LastEditTime: 2020-05-03 03:05:36
+ * @LastEditTime: 2020-05-03 04:31:54
  * @LastEditors: Please set LastEditors
  * @Description: Testbench for data transfering between uart_tx_top and uart_rx_top
  * @FilePath: /uart/tb/tb_tx_rx_top.v
@@ -36,7 +36,8 @@
         .uart_tx_en(uart_tx_en),
         .uart_tx_din(uart_tx_din),
         .uart_tx_dout(uart_tx_dout),
-        .uart_tx_done(uart_tx_done)
+        .uart_tx_done(uart_tx_done),
+        .uart_tx_bit_clk()
     );
 
     wire    [0:FRAME_WIDTH - 1]     uart_rx_dout;
@@ -57,7 +58,8 @@
         .uart_rx_dout(uart_rx_dout),
         .uart_rx_done(uart_rx_done),
         .uart_rx_data_error(uart_rx_data_error),
-        .uart_rx_frame_error(uart_rx_frame_error)
+        .uart_rx_frame_error(uart_rx_frame_error),
+        .uart_rx_sample_clk()
     );
 
     always #(0.5 * SYS_CYCLE_TIME) sys_clk = ~ sys_clk;
@@ -94,7 +96,7 @@
         file = $fopen("./output.log", "w");
     end
 
-    wire    sample_clk  =   uart_rx_top_inst.sample_clk;
+    wire    sample_clk  =   uart_rx_top_inst.sample_clk_i;
     always @(posedge sample_clk) begin
         if(uart_rx_done)
             $fdisplay(file, "data(decimal): %1d, data(binary): %b, data_error: %b, frame_error: %b", 

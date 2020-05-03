@@ -1,7 +1,7 @@
 /*
  * @Author: Yihao Wang
  * @Date: 2020-05-03 00:23:42
- * @LastEditTime: 2020-05-03 03:13:55
+ * @LastEditTime: 2020-05-03 04:36:31
  * @LastEditors: Please set LastEditors
  * @Description: Top module of UART Tx (integrate clk_gen and send_logic)
  * @FilePath: /uart/src/uart_tx_top.v
