@@ -1,7 +1,7 @@
 /*
  * @Author: Yihao Wang
  * @Date: 2020-05-03 02:13:15
- * @LastEditTime: 2020-05-03 04:31:54
+ * @LastEditTime: 2020-05-04 21:41:28
  * @LastEditors: Please set LastEditors
  * @Description: Testbench for data transfering between uart_tx_top and uart_rx_top
  * @FilePath: /uart/tb/tb_tx_rx_top.v

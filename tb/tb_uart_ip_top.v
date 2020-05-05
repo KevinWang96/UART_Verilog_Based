@@ -1,7 +1,7 @@
 /*
  * @Author: Yihao Wang
  * @Date: 2020-05-04 00:07:07
- * @LastEditTime: 2020-05-04 02:34:32
+ * @LastEditTime: 2020-05-04 21:55:14
  * @LastEditors: Please set LastEditors
  * @Description: Testbench for uart_ip_top.v
  * @FilePath: /uart/tb/tb_uart_ip_top.v
@@ -13,7 +13,6 @@
     parameter   BAUD_RATE       =   19200;
     parameter   FRAME_WIDTH     =   8;
     parameter   FIFO_DEPTH      =   128;
-
     parameter   SYS_CYCLE_TIME  =   1_000_000_000 / SYS_CLK_FREQ;
 
     reg                         sys_clk;
@@ -115,7 +114,7 @@
         si_0 = 0;
         ro_0 = 0;
         si_1 = 0;
-        ro_1 = 1;
+        ro_1 = 0;
 
         #(3.5 * SYS_CYCLE_TIME)
         reset = 0;
@@ -129,14 +128,17 @@
         end
         si_0 = 0;
 
-         #(100_000_000);
+         #(1_000_000_000);
          $fclose(log_file);
          $finish;
     end
 
     always @(posedge sys_clk) begin
+        ro_1 = 1;
         if(so_1)
             $fdisplay(log_file, "data(decimal): %1d, data(binary): %b;", dout_1, dout_1);
+        #(SYS_CYCLE_TIME) ro_1 = 0;
+        #(250_000);  // decrease read speed to test flow control
     end
 
  endmodule
